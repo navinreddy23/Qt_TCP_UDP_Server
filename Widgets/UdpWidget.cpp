@@ -7,21 +7,26 @@
 #include "UdpWidget.h"
 #include "ui_UdpWidget.h"
 
-MicUdpWidget::MicUdpWidget(QWidget *parent) :
+#define KEY_FONT            "udpFont"
+#define KEY_UDP_PORT        "udpPort"
+
+UdpWidget::UdpWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MicUdpWidget)
 {
     ui->setupUi(this);
 
     Init();
+    LoadSettings();
 }
 
-MicUdpWidget::~MicUdpWidget()
+UdpWidget::~UdpWidget()
 {
+    SaveSettings();
     delete ui;
 }
 
-void MicUdpWidget::on_btnMicUdpStartStop_clicked()
+void UdpWidget::on_btnMicUdpStartStop_clicked()
 {
     if (!m_started)
         StartServer();
@@ -29,17 +34,17 @@ void MicUdpWidget::on_btnMicUdpStartStop_clicked()
         StopServer();
 }
 
-void MicUdpWidget::on_cmbMicUdpLogLevel_currentIndexChanged(int index)
+void UdpWidget::on_cmbMicUdpLogLevel_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
     AssignLogLevel();
 }
 
-void MicUdpWidget::UpdateUiElements()
+void UdpWidget::UpdateUiElements()
 {
 }
 
-void MicUdpWidget::logOutput(log_level_t level, const QString &message)
+void UdpWidget::logOutput(log_level_t level, const QString &message)
 {
     if (level > LOG_NONE && level <= m_logLevel)
     {
@@ -48,17 +53,17 @@ void MicUdpWidget::logOutput(log_level_t level, const QString &message)
     }
 }
 
-void MicUdpWidget::on_teMicUdp_textChanged()
+void UdpWidget::on_teMicUdp_textChanged()
 {
     emit logChanged();
 }
 
-void MicUdpWidget::Init()
+void UdpWidget::Init()
 {
     m_timer.setInterval(1000);
     m_timer.start();
 
-    connect(&m_timer, &QTimer::timeout, this, &MicUdpWidget::UpdateUiElements);
+    connect(&m_timer, &QTimer::timeout, this, &UdpWidget::UpdateUiElements);
 
     m_started = false;
     ui->btnMicUdpStartStop->setStyleSheet("QPushButton {background-color: ForestGreen; color: white;}");
@@ -67,37 +72,66 @@ void MicUdpWidget::Init()
     AssignPort();
 }
 
-void MicUdpWidget::AssignPort()
+void UdpWidget::LoadSettings()
+{
+    QFont font;
+    QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+
+    settings.beginGroup(this->objectName());
+
+    font = settings.value(KEY_FONT, QFont()).value<QFont>();
+    ui->lePort->setText(settings.value(KEY_UDP_PORT).toString());
+    AssignPort();
+
+    settings.endGroup();
+
+    ui->teMicUdp->setCurrentFont(font);
+}
+
+void UdpWidget::SaveSettings()
+{
+    QFont font = ui->teMicUdp->currentFont();
+    QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+
+    settings.beginGroup(this->objectName());
+
+    settings.setValue(KEY_FONT, font);
+    settings.setValue(KEY_UDP_PORT, ui->lePort->text());
+
+    settings.endGroup();
+}
+
+void UdpWidget::AssignPort()
 {
     m_port = ui->lePort->text().toUShort();
 }
 
-void MicUdpWidget::AssignLogLevel()
+void UdpWidget::AssignLogLevel()
 {
     m_logLevel = (log_level_t) ui->cmbMicUdpLogLevel->currentIndex();
 }
 
-void MicUdpWidget::DisableUiElementsOnStart()
+void UdpWidget::DisableUiElementsOnStart()
 {
     ui->lePort->setEnabled(false);
 }
 
-void MicUdpWidget::EnableUiElements()
+void UdpWidget::EnableUiElements()
 {
     ui->lePort->setEnabled(true);
 }
 
-void MicUdpWidget::SetStatus(const QString &message)
+void UdpWidget::SetStatus(const QString &message)
 {
     emit setStatus(message);
 }
 
-void MicUdpWidget::StartServer()
+void UdpWidget::StartServer()
 {
     if (m_server == nullptr)
     {
         m_server = new UdpServer(this);
-        connect(m_server, &UdpServer::logOutput, this, &MicUdpWidget::logOutput);
+        connect(m_server, &UdpServer::logOutput, this, &UdpWidget::logOutput);
     }
 
     m_server->Start(m_port);
@@ -118,7 +152,7 @@ void MicUdpWidget::StartServer()
     }
 }
 
-void MicUdpWidget::StopServer()
+void UdpWidget::StopServer()
 {
     if (m_server != nullptr)
     {
@@ -138,9 +172,7 @@ void MicUdpWidget::StopServer()
     }
 }
 
-
-
-void MicUdpWidget::on_lePort_textChanged(const QString &arg1)
+void UdpWidget::on_lePort_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1)
     AssignPort();

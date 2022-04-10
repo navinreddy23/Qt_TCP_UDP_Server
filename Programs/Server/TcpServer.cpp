@@ -28,12 +28,11 @@ void TcpServer::Start(quint16 port)
     {
         qInfo() << "Mic Server started on " << port;
         LogOutputEmitter(LOG_INFO, QString("Mic server started on port: %1").arg(port));
-        LogOutputEmitter(LOG_INFO, QString("Wait for the Mics to connect (30s) after pressing the power button for 6 seconds"));
         m_started = true;
     }
     else
     {
-        LogOutputEmitter(LOG_ERROR, QString("Failed to start Mic on: %1").arg(this->errorString()));
+        LogOutputEmitter(LOG_ERROR, QString("Failed to start server on: %1").arg(this->errorString()));
         qCritical() << this->errorString();
         m_started = false;
     }
@@ -43,7 +42,7 @@ void TcpServer::Quit()
 {
     m_activeConnections = 0;
     emit quit();;
-    LogOutputEmitter(LOG_INFO, QString("Stopped TCP server for MIC"));
+    LogOutputEmitter(LOG_INFO, QString("Stopped TCP server"));
     pool.clear();
     m_started = false;
     this->close();
@@ -54,7 +53,7 @@ void TcpServer::incomingConnection(qintptr handle)
     qInfo() << "Incoming connection " << handle << " on " << QThread::currentThread();
     m_activeConnections++;
 
-    LogOutputEmitter(LOG_INFO, QString("Incoming Mic TCP connection.."));
+    LogOutputEmitter(LOG_INFO, QString("Incoming TCP connection.."));
 
     TcpHandler* client = new TcpHandler(nullptr,
                                           handle);

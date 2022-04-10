@@ -19,10 +19,10 @@ void UdpServer::Start(quint16 port)
 {
     if(!socket.bind(QHostAddress::AnyIPv4, port))
     {
-        qInfo() << "Failed to start Mic UDP server: "
+        qInfo() << "Failed to start UDP server: "
                 << socket.errorString();
 
-        LogOutputEmitter(LOG_ERROR, QString("Failed to start MIC UDP server: %1").arg(socket.errorString()));
+        LogOutputEmitter(LOG_ERROR, QString("Failed to start UDP server: %1").arg(socket.errorString()));
         m_started = false;
 
         return;
@@ -34,13 +34,12 @@ void UdpServer::Start(quint16 port)
             << socket.localAddress()
             << " : " << socket.localPort();
 
-    LogOutputEmitter(LOG_INFO, QString("Started UDP server for MIC on %1:%2").arg(socket.localAddress().toString()).arg(socket.localPort()));
-    LogOutputEmitter(LOG_INFO, QString("Wait for the Mics to connect (30s) after pressing the power button for 6 seconds"));
+    LogOutputEmitter(LOG_INFO, QString("Started UDP server for on %1:%2").arg(socket.localAddress().toString()).arg(socket.localPort()));
 }
 
 void UdpServer::Quit()
 {
-    LogOutputEmitter(LOG_INFO, QString("Stopped UDP server for MIC"));
+    LogOutputEmitter(LOG_INFO, QString("Stopped UDP server"));
     m_started = false;
     socket.close();
 }

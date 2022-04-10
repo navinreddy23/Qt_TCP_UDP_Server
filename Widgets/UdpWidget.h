@@ -12,13 +12,13 @@ namespace Ui {
 class MicUdpWidget;
 }
 
-class MicUdpWidget : public QWidget
+class UdpWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit MicUdpWidget(QWidget *parent = nullptr);
-    ~MicUdpWidget();
+    explicit UdpWidget(QWidget *parent = nullptr);
+    ~UdpWidget();
 
 private slots:
     void on_btnMicUdpStartStop_clicked();
@@ -48,6 +48,9 @@ private:
     log_level_t m_logLevel = LOG_INFO;
 
     void Init(void);
+    void LoadSettings(void);
+    void SaveSettings(void);
+
     void AssignPort(void);
     void AssignLogLevel(void);
 

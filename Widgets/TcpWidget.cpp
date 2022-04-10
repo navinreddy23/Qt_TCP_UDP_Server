@@ -7,21 +7,26 @@
 #include "TcpWidget.h"
 #include "ui_TcpWidget.h"
 
-MicTcpWidget::MicTcpWidget(QWidget *parent) :
+#define KEY_FONT            "tcpFont"
+#define KEY_TCP_PORT        "tcpPort"
+
+TcpWidget::TcpWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MicTcpWidget)
 {
     ui->setupUi(this);
 
     Init();
+    LoadSettings();
 }
 
-MicTcpWidget::~MicTcpWidget()
+TcpWidget::~TcpWidget()
 {
+    SaveSettings();
     delete ui;
 }
 
-void MicTcpWidget::on_btnMicTcpStartStop_clicked()
+void TcpWidget::on_btnMicTcpStartStop_clicked()
 {
     if (!m_started)
         StartServer();
@@ -29,19 +34,13 @@ void MicTcpWidget::on_btnMicTcpStartStop_clicked()
         StopServer();
 }
 
-void MicTcpWidget::on_cmbMicTcpPort_currentIndexChanged(int index)
-{
-    Q_UNUSED(index)
-    AssignPort();
-}
-
-void MicTcpWidget::on_cmbMicTcpLogLevel_currentIndexChanged(int index)
+void TcpWidget::on_cmbMicTcpLogLevel_currentIndexChanged(int index)
 {
     Q_UNUSED(index)
     AssignLogLevel();
 }
 
-void MicTcpWidget::UpdateUiElements()
+void TcpWidget::UpdateUiElements()
 {
     if (m_server != nullptr)
     {
@@ -49,7 +48,7 @@ void MicTcpWidget::UpdateUiElements()
     }
 }
 
-void MicTcpWidget::logOutput(log_level_t level, const QString &message)
+void TcpWidget::logOutput(log_level_t level, const QString &message)
 {
     if (level > LOG_NONE && level <= m_logLevel)
     {
@@ -58,22 +57,22 @@ void MicTcpWidget::logOutput(log_level_t level, const QString &message)
     }
 }
 
-void MicTcpWidget::on_teMicTcp_textChanged()
+void TcpWidget::on_teMicTcp_textChanged()
 {
     emit logChanged();
 }
 
-void MicTcpWidget::UpdateDeviceList(const QString &device, const QString &version)
+void TcpWidget::UpdateDeviceList(const QString &device, const QString &version)
 {
     SetStatus("Mic (TCP) Updated: " + device + "\t to \t" + version);
 }
 
-void MicTcpWidget::Init()
+void TcpWidget::Init()
 {
     m_timer.setInterval(1000);
     m_timer.start();
 
-    connect(&m_timer, &QTimer::timeout, this, &MicTcpWidget::UpdateUiElements);
+    connect(&m_timer, &QTimer::timeout, this, &TcpWidget::UpdateUiElements);
 
     m_started = false;
     /* ui->btnMicTcpStartStop->setIcon(QIcon(":/files/Images/start.png")); */
@@ -82,37 +81,66 @@ void MicTcpWidget::Init()
     AssignPort();
 }
 
-void MicTcpWidget::AssignPort()
+void TcpWidget::LoadSettings()
+{
+    QFont font;
+    QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+
+    settings.beginGroup(this->objectName());
+
+    font = settings.value(KEY_FONT, QFont()).value<QFont>();
+    ui->lePort->setText(settings.value(KEY_TCP_PORT).toString());
+    AssignPort();
+
+    settings.endGroup();
+
+    ui->teMicTcp->setCurrentFont(font);
+}
+
+void TcpWidget::SaveSettings()
+{
+    QFont font = ui->teMicTcp->currentFont();
+    QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
+
+    settings.beginGroup(this->objectName());
+
+    settings.setValue(KEY_FONT, font);
+    settings.setValue(KEY_TCP_PORT, ui->lePort->text());
+
+    settings.endGroup();
+}
+
+void TcpWidget::AssignPort()
 {
     m_port = ui->lePort->text().toUShort();
 }
 
-void MicTcpWidget::AssignLogLevel()
+void TcpWidget::AssignLogLevel()
 {
     m_logLevel = (log_level_t) ui->cmbMicTcpLogLevel->currentIndex();
 }
 
-void MicTcpWidget::DisableUiElementsOnStart()
+void TcpWidget::DisableUiElementsOnStart()
 {
     ui->lePort->setEnabled(false);
 }
 
-void MicTcpWidget::EnableUiElements()
+void TcpWidget::EnableUiElements()
 {
     ui->lePort->setEnabled(true);
 }
 
-void MicTcpWidget::SetStatus(const QString &message)
+void TcpWidget::SetStatus(const QString &message)
 {
     emit setStatus(message);
 }
 
-void MicTcpWidget::StartServer()
+void TcpWidget::StartServer()
 {
     if (m_server == nullptr)
     {
         m_server = new TcpServer(this);
-        connect(m_server, &TcpServer::logOutput, this, &MicTcpWidget::logOutput);
+        connect(m_server, &TcpServer::logOutput, this, &TcpWidget::logOutput);
     }
 
     m_server->Start(m_port);
@@ -133,7 +161,7 @@ void MicTcpWidget::StartServer()
     }
 }
 
-void MicTcpWidget::StopServer()
+void TcpWidget::StopServer()
 {
     if (m_server != nullptr)
     {
@@ -153,7 +181,7 @@ void MicTcpWidget::StopServer()
     }
 }
 
-void MicTcpWidget::on_lePort_textChanged(const QString &arg1)
+void TcpWidget::on_lePort_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1)
     AssignPort();

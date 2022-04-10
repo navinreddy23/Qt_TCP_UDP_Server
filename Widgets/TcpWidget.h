@@ -12,13 +12,13 @@ namespace Ui {
 class MicTcpWidget;
 }
 
-class MicTcpWidget : public QWidget
+class TcpWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit MicTcpWidget(QWidget *parent = nullptr);
-    ~MicTcpWidget();
+    explicit TcpWidget(QWidget *parent = nullptr);
+    ~TcpWidget();
 
 signals:
     emit void setStatus(const QString& message);
@@ -26,8 +26,6 @@ signals:
 
 private slots:
     void on_btnMicTcpStartStop_clicked();
-
-    void on_cmbMicTcpPort_currentIndexChanged(int index);
 
     void on_cmbMicTcpLogLevel_currentIndexChanged(int index);
 
@@ -51,6 +49,8 @@ private:
     log_level_t m_logLevel = LOG_INFO;
 
     void Init(void);
+    void LoadSettings();
+    void SaveSettings();
     void AssignPort(void);
     void AssignLogLevel(void);
 

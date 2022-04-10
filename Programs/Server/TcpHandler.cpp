@@ -56,7 +56,7 @@ void TcpHandler::close()
 {
     qInfo() << "Closing TCP socket: " << socket;
     emit closeConn();
-    LogOutputEmitter(LOG_DEBUG, QString("Closing MIC TCP connection: %1").arg((qlonglong)socket));
+    LogOutputEmitter(LOG_DEBUG, QString("Closing TCP connection: %1").arg((qlonglong)socket));
 
     socket->close();
     socket->deleteLater();

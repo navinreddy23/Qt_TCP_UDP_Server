@@ -57,8 +57,8 @@ private:
     bool m_initFailed = false;
     bool m_logChanged = false;
 
-    MicUdpWidget* m_micUdpWidget = nullptr;
-    MicTcpWidget* m_micTcpWidget = nullptr;
+    UdpWidget* m_micUdpWidget = nullptr;
+    TcpWidget* m_micTcpWidget = nullptr;
 
     void Init();
     void LoadSettings();
