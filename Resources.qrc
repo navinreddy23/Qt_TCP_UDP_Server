@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/files">
+        <file>Images/browse.png</file>
+        <file>Images/exit.png</file>
+        <file>Images/filter.png</file>
+        <file>Images/about.png</file>
+        <file>Images/saveSlNr.png</file>
+        <file>Images/undo.svg</file>
+        <file>Images/search.svg</file>
+        <file>Images/save as.svg</file>
+        <file>Images/save all.svg</file>
+        <file>Images/save.svg</file>
+        <file>Images/redo.svg</file>
+        <file>Images/open.svg</file>
+        <file>Images/info.svg</file>
+        <file>Images/help.svg</file>
+        <file>Images/font.svg</file>
+        <file>Images/clear.svg</file>
+        <file>Images/app-icon.png</file>
+        <file>Images/server.png</file>
+    </qresource>
+</RCC>
