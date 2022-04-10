@@ -22,7 +22,6 @@ public:
 signals:
     void logOutput(log_level_t level, const QString& message);
     void closeConn(void);
-    void deviceUpdated(const QString& device, const QString& version);
 
     // QRunnable interface
 public:

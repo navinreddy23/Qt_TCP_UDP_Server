@@ -22,7 +22,6 @@ public:
 
 signals:
     emit void logOutput(log_level_t level, const QString& message);
-    emit void firmwareUpdated(const QString& message);
     emit void stringRxd(const QString &rxStr);
 
 public slots:

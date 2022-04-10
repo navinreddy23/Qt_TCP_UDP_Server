@@ -350,6 +350,12 @@ QTextEdit *MainWindow::GetTextEditPtr(quint8 tabIndex)
                     break;
                 }
             }
+
+            if (ptr != nullptr)
+            {
+                break;
+            }
+
         }
     }
 

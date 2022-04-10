@@ -22,12 +22,10 @@ public:
     void Quit();
     bool Started() const;
     quint32 ActiveConnections() const;
-    quint32 DevicesUpdated() const;
 
 signals:
     emit void quit();
     void logOutput(log_level_t level, const QString& message);
-    emit void deviceUpdated(const QString& device, const QString& version);
 
     // QTcpServer interface
 protected:

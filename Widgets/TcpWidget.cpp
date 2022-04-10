@@ -119,7 +119,6 @@ void MicTcpWidget::StartServer()
     {
         m_server = new TcpServer(this);
         connect(m_server, &TcpServer::logOutput, this, &MicTcpWidget::logOutput);
-        connect(m_server, &TcpServer::deviceUpdated, this, &MicTcpWidget::UpdateDeviceList);
     }
 
     m_server->Start(m_port);

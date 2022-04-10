@@ -23,9 +23,9 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060300    # disables all the APIs depr
 
 SOURCES += \
     Dialogs/AboutDialog.cpp \
-    Programs/Mic/TcpHandler.cpp \
-    Programs/Mic/TcpServer.cpp \
-    Programs/Mic/UdpServer.cpp \
+    Programs/Server/TcpHandler.cpp \
+    Programs/Server/TcpServer.cpp \
+    Programs/Server/UdpServer.cpp \
     Programs/Misc/Logger.cpp \
     Programs/Serial/Serial.cpp \
     Widgets/TcpWidget.cpp \
@@ -35,9 +35,9 @@ SOURCES += \
 
 HEADERS += \
     Dialogs/AboutDialog.h \
-    Programs/Mic/TcpHandler.h \
-    Programs/Mic/TcpServer.h \
-    Programs/Mic/UdpServer.h \
+    Programs/Server/TcpHandler.h \
+    Programs/Server/TcpServer.h \
+    Programs/Server/UdpServer.h \
     Programs/Misc/Logger.h \
     Programs/Serial/Serial.h \
     Widgets/TcpWidget.h \

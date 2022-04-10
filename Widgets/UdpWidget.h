@@ -6,7 +6,7 @@
 #include <QWidget>
 #include <QLineEdit>
 #include "Programs/Misc/Logger.h"
-#include "Programs/Mic/UdpServer.h"
+#include "Programs/Server/UdpServer.h"
 
 namespace Ui {
 class MicUdpWidget;

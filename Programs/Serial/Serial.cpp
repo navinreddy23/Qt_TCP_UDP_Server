@@ -30,13 +30,6 @@ void Serial::onReadyRead()
     {
         ProcessLine(m_serialData);
         m_serialData.clear();
-//        m_serial.clear();
-    }
-    else if((size >= 2) && (m_serialData.at(size - 2) == '$') && (m_serialData.at(size - 1) == ' ')) // Speaksee TEST CMD
-    {
-        ProcessLine(m_serialData);
-        m_serialData.clear();
-//        m_serial.clear();
     }
 }
 
@@ -131,14 +124,6 @@ void Serial::ProcessLine(QByteArray &data)
             LogOutputEmitter(LOG_VERBOSE, str);
             emit stringRxd(str);
         }
-    }
-
-    QRegularExpression rx("firmware updated: [0-9]+\\.[0-9]+\\.[0-9]+", QRegularExpression::CaseInsensitiveOption);
-    QRegularExpressionMatch match = rx.match(dataStr);
-
-    if(match.hasMatch())
-    {
-        emit firmwareUpdated(match.captured(0));
     }
 }
 

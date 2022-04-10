@@ -6,7 +6,7 @@
 #include <QTimer>
 #include <QLineEdit>
 #include "Programs/Misc/Logger.h"
-#include "Programs/Mic/TcpServer.h"
+#include "Programs/Server/TcpServer.h"
 
 namespace Ui {
 class MicTcpWidget;
