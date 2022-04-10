@@ -126,12 +126,12 @@ void MainWindow::Init()
     this->setCentralWidget(ui->tabWidget);
 
     m_micUdpWidget = new MicUdpWidget(this);
-    ui->tabWidget->addTab(m_micUdpWidget, "Mic UDP");
+    ui->tabWidget->addTab(m_micUdpWidget, "UDP Server");
     connect(m_micUdpWidget, &MicUdpWidget::setStatus, this, &MainWindow::SetStatus);
     connect(m_micUdpWidget, &MicUdpWidget::logChanged, this, &MainWindow::onLogChanged);
 
     m_micTcpWidget = new MicTcpWidget(this);
-    ui->tabWidget->addTab(m_micTcpWidget, "Mic TCP");
+    ui->tabWidget->addTab(m_micTcpWidget, "TCP Server");
     connect(m_micTcpWidget, &MicTcpWidget::setStatus, this, &MainWindow::SetStatus);
     connect(m_micTcpWidget, &MicTcpWidget::logChanged, this, &MainWindow::onLogChanged);
 
@@ -312,6 +312,11 @@ QTextEdit *MainWindow::GetCurrentTextEditPtr()
                 {
                     break;
                 }
+            }
+
+            if (ptr != nullptr)
+            {
+                break;
             }
         }
     }
