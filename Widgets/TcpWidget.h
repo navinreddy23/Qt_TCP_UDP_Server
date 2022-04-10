@@ -39,6 +39,8 @@ private slots:
 
     void on_teMicTcp_textChanged();
 
+    void on_lePort_textChanged(const QString &arg1);
+
 private:
     Ui::MicTcpWidget *ui;
 
@@ -49,7 +51,6 @@ private:
     log_level_t m_logLevel = LOG_INFO;
 
     void Init(void);
-    void AssignOtaType(void);
     void AssignPort(void);
     void AssignLogLevel(void);
 

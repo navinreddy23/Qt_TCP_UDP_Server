@@ -5,7 +5,7 @@
 #include <QMessageBox>
 
 #include "UdpWidget.h"
-#include "ui_MicUdpWidget.h"
+#include "ui_UdpWidget.h"
 
 MicUdpWidget::MicUdpWidget(QWidget *parent) :
     QWidget(parent),
@@ -64,18 +64,12 @@ void MicUdpWidget::Init()
     ui->btnMicUdpStartStop->setStyleSheet("QPushButton {background-color: ForestGreen; color: white;}");
    /*  ui->btnMicUdpStartStop->setIcon(QIcon(":/files/Images/start.png")); */
 
-    AssignOtaType();
     AssignPort();
-}
-
-void MicUdpWidget::AssignOtaType()
-{
-
 }
 
 void MicUdpWidget::AssignPort()
 {
-    m_port = ui->cmbMicUdpPort->currentText().toUShort();
+    m_port = ui->lePort->text().toUShort();
 }
 
 void MicUdpWidget::AssignLogLevel()
@@ -85,12 +79,12 @@ void MicUdpWidget::AssignLogLevel()
 
 void MicUdpWidget::DisableUiElementsOnStart()
 {
-    ui->cmbMicUdpPort->setEnabled(false);
+    ui->lePort->setEnabled(false);
 }
 
 void MicUdpWidget::EnableUiElements()
 {
-    ui->cmbMicUdpPort->setEnabled(true);
+    ui->lePort->setEnabled(true);
 }
 
 void MicUdpWidget::SetStatus(const QString &message)
@@ -144,4 +138,11 @@ void MicUdpWidget::StopServer()
     }
 }
 
+
+
+void MicUdpWidget::on_lePort_textChanged(const QString &arg1)
+{
+    Q_UNUSED(arg1)
+    AssignPort();
+}
 

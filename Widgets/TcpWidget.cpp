@@ -5,7 +5,7 @@
 #include <QMessageBox>
 
 #include "TcpWidget.h"
-#include "ui_MicTcpWidget.h"
+#include "ui_TcpWidget.h"
 
 MicTcpWidget::MicTcpWidget(QWidget *parent) :
     QWidget(parent),
@@ -79,18 +79,12 @@ void MicTcpWidget::Init()
     /* ui->btnMicTcpStartStop->setIcon(QIcon(":/files/Images/start.png")); */
     ui->btnMicTcpStartStop->setStyleSheet("QPushButton {background-color: ForestGreen; color: white;}");
 
-    AssignOtaType();
     AssignPort();
-}
-
-void MicTcpWidget::AssignOtaType()
-{
-
 }
 
 void MicTcpWidget::AssignPort()
 {
-    m_port = ui->cmbMicTcpPort->currentText().toUShort();
+    m_port = ui->lePort->text().toUShort();
 }
 
 void MicTcpWidget::AssignLogLevel()
@@ -100,12 +94,12 @@ void MicTcpWidget::AssignLogLevel()
 
 void MicTcpWidget::DisableUiElementsOnStart()
 {
-    ui->cmbMicTcpPort->setEnabled(false);
+    ui->lePort->setEnabled(false);
 }
 
 void MicTcpWidget::EnableUiElements()
 {
-    ui->cmbMicTcpPort->setEnabled(true);
+    ui->lePort->setEnabled(true);
 }
 
 void MicTcpWidget::SetStatus(const QString &message)
@@ -159,5 +153,9 @@ void MicTcpWidget::StopServer()
     }
 }
 
-
+void MicTcpWidget::on_lePort_textChanged(const QString &arg1)
+{
+    Q_UNUSED(arg1)
+    AssignPort();
+}
 

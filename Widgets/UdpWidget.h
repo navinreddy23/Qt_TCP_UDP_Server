@@ -31,6 +31,8 @@ private slots:
 
     void on_teMicUdp_textChanged();
 
+    void on_lePort_textChanged(const QString &arg1);
+
 signals:
     emit void setStatus(const QString& message);
     emit void logChanged(void);
@@ -46,7 +48,6 @@ private:
     log_level_t m_logLevel = LOG_INFO;
 
     void Init(void);
-    void AssignOtaType(void);
     void AssignPort(void);
     void AssignLogLevel(void);
 

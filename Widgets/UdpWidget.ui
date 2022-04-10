@@ -98,7 +98,27 @@ p, li { white-space: pre-wrap; }
      <property name="title">
       <string/>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_MicUdp_5">
+        <property name="text">
+         <string>Port:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="lePort">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>20000</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="2">
        <spacer name="horizontalSpacer">
         <property name="orientation">
@@ -112,21 +132,6 @@ p, li { white-space: pre-wrap; }
         </property>
        </spacer>
       </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="cmbMicUdpPort">
-        <property name="minimumSize">
-         <size>
-          <width>75</width>
-          <height>0</height>
-         </size>
-        </property>
-        <item>
-         <property name="text">
-          <string>20000</string>
-         </property>
-        </item>
-       </widget>
-      </item>
       <item row="0" column="3">
        <widget class="QPushButton" name="btnMicUdpStartStop">
         <property name="minimumSize">
@@ -137,13 +142,6 @@ p, li { white-space: pre-wrap; }
         </property>
         <property name="text">
          <string>Start</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_MicUdp_5">
-        <property name="text">
-         <string>Port:</string>
         </property>
        </widget>
       </item>
