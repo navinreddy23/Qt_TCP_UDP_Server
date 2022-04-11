@@ -84,6 +84,7 @@ void TcpHandler::onTimeout()
 
 void TcpHandler::onQuit()
 {
+    socket->close();
     m_quit = true;
 }
 
