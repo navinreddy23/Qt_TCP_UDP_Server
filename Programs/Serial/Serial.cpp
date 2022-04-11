@@ -79,14 +79,68 @@ void Serial::Init()
     }
 }
 
+void Serial::Open(const QString &port, const QString &baudRate)
+{
+    QSerialPort::BaudRate baud = QSerialPort::Baud38400;
+
+    if(baudRate == "9600")
+    {
+        baud = QSerialPort::Baud9600;
+    }
+    else if(baudRate == "38400")
+    {
+        baud = QSerialPort::Baud38400;
+    }
+    else if(baudRate == "115200")
+    {
+        baud = QSerialPort::Baud115200;
+    }
+    else
+    {
+        qInfo() << "Invalid baud rate: " << baudRate;
+    }
+
+    m_serial.setBaudRate(baud);
+    m_serial.setPortName(port);
+    m_serial.setFlowControl(QSerialPort::NoFlowControl);
+    m_serial.setParity(QSerialPort::NoParity);
+    m_serial.setDataBits(QSerialPort::Data8);
+    m_serial.setStopBits(QSerialPort::OneStop);
+
+    if (!m_serial.open(QIODevice::ReadWrite))
+    {
+        qInfo() << m_serial.errorString();
+        LogOutputEmitter(LOG_ERROR, m_serial.errorString());
+    }
+    else
+    {
+        m_isInit = true;
+        qInfo() << "Serial port opened: " << m_serial.portName();
+        LogOutputEmitter(LOG_INFO, "Serial port opened: " + m_serial.portName());
+    }
+}
+
+QStringList Serial::Scan()
+{
+    QList<QSerialPortInfo> list;
+    QString port = "";
+    QStringList portList;
+
+    m_serialData.clear();
+
+    list = QSerialPortInfo::availablePorts();
+
+    foreach(QSerialPortInfo info, list)
+    {
+        portList.append(info.portName());
+    }
+
+    return portList;
+}
+
 bool Serial::IsInitialized()
 {
     return  m_isInit;
-}
-
-void Serial::Open()
-{
-    Init();
 }
 
 void Serial::Close()
@@ -121,7 +175,7 @@ void Serial::ProcessLine(QByteArray &data)
             str.remove("[33m");
             str.remove("[31m");
             str.remove("[0m");
-            LogOutputEmitter(LOG_VERBOSE, str);
+            LogOutputEmitter(LOG_INFO, str);
             emit stringRxd(str);
         }
     }

@@ -65,6 +65,11 @@ void UdpWidget::Init()
 
     connect(&m_timer, &QTimer::timeout, this, &UdpWidget::UpdateUiElements);
 
+    m_serial = new Serial(this);
+    connect(m_serial, &Serial::logOutput, this, &UdpWidget::logOutput);
+
+    AddSerialPorts(m_serial->Scan());
+
     m_started = false;
     ui->btnMicUdpStartStop->setStyleSheet("QPushButton {background-color: ForestGreen; color: white;}");
    /*  ui->btnMicUdpStartStop->setIcon(QIcon(":/files/Images/start.png")); */
@@ -99,6 +104,14 @@ void UdpWidget::SaveSettings()
     settings.setValue(KEY_UDP_PORT, ui->lePort->text());
 
     settings.endGroup();
+}
+
+void UdpWidget::AddSerialPorts(const QStringList &list)
+{
+    ui->cmbSerialPort->clear();
+
+    ui->cmbSerialPort->addItem("Select Port");
+    ui->cmbSerialPort->addItems(list);
 }
 
 void UdpWidget::AssignPort()
@@ -176,5 +189,39 @@ void UdpWidget::on_lePort_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1)
     AssignPort();
+}
+
+void UdpWidget::on_btnSerial_clicked()
+{
+    if(m_opened)
+    {
+        m_serial->Close();
+
+        ui->cmbSerialPort->setDisabled(false);
+        ui->cmbBaud->setDisabled(false);
+
+        m_opened = false;
+        ui->btnSerial->setText("Open");
+
+        AddSerialPorts(m_serial->Scan());
+    }
+    else
+    {
+        m_serial->Open(ui->cmbSerialPort->currentText(), ui->cmbBaud->currentText());
+
+        if(m_serial->IsInitialized())
+        {
+            m_opened = true;
+
+            ui->cmbSerialPort->setDisabled(true);
+            ui->cmbBaud->setDisabled(true);
+
+            ui->btnSerial->setText("Close");
+        }
+        else
+        {
+            AddSerialPorts(m_serial->Scan());
+        }
+    }
 }
 

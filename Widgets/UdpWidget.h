@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QLineEdit>
 #include "Programs/Misc/Logger.h"
+#include "Programs/Serial/Serial.h"
 #include "Programs/Server/UdpServer.h"
 
 namespace Ui {
@@ -33,6 +34,8 @@ private slots:
 
     void on_lePort_textChanged(const QString &arg1);
 
+    void on_btnSerial_clicked();
+
 signals:
     emit void setStatus(const QString& message);
     emit void logChanged(void);
@@ -41,16 +44,19 @@ signals:
 private:
     Ui::MicUdpWidget *ui;
 
+    Serial* m_serial = nullptr;
     QTimer m_timer;
     quint16 m_port = 0;
     bool m_started = false;
     UdpServer* m_server = nullptr;
     log_level_t m_logLevel = LOG_INFO;
+    bool m_opened = false;
 
     void Init(void);
     void LoadSettings(void);
     void SaveSettings(void);
 
+    void AddSerialPorts(const QStringList &list);
     void AssignPort(void);
     void AssignLogLevel(void);
 

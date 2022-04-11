@@ -16,8 +16,9 @@ public:
     ~Serial();
 
     void Init();
+    void Open(const QString& port, const QString& baudRate);
+    QStringList Scan(void);
     bool IsInitialized(void);
-    void Open();
     void Close();
 
 signals:
