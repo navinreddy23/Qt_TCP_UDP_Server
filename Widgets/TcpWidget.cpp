@@ -46,6 +46,10 @@ void TcpWidget::UpdateUiElements()
     {
         ui->lblMicTcpActiveConn->setText(QString("%1").arg(m_server->ActiveConnections()));
     }
+    else
+    {
+        ui->lblMicTcpActiveConn->setText(QString("0"));
+    }
 }
 
 void TcpWidget::logOutput(log_level_t level, const QString &message)
