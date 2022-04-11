@@ -78,6 +78,11 @@ void TcpWidget::Init()
 
     connect(&m_timer, &QTimer::timeout, this, &TcpWidget::UpdateUiElements);
 
+    m_serial = new Serial(this);
+    connect(m_serial, &Serial::logOutput, this, &TcpWidget::logOutput);
+
+    AddSerialPorts(m_serial->Scan());
+
     m_started = false;
     /* ui->btnMicTcpStartStop->setIcon(QIcon(":/files/Images/start.png")); */
     ui->btnMicTcpStartStop->setStyleSheet("QPushButton {background-color: ForestGreen; color: white;}");
@@ -112,6 +117,14 @@ void TcpWidget::SaveSettings()
     settings.setValue(KEY_TCP_PORT, ui->lePort->text());
 
     settings.endGroup();
+}
+
+void TcpWidget::AddSerialPorts(const QStringList &list)
+{
+    ui->cmbSerialPort->clear();
+
+    ui->cmbSerialPort->addItem("Select Port");
+    ui->cmbSerialPort->addItems(list);
 }
 
 void TcpWidget::AssignPort()
@@ -189,5 +202,40 @@ void TcpWidget::on_lePort_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1)
     AssignPort();
+}
+
+
+void TcpWidget::on_btnSerial_clicked()
+{
+    if(m_opened)
+    {
+        m_serial->Close();
+
+        ui->cmbSerialPort->setDisabled(false);
+        ui->cmbBaud->setDisabled(false);
+
+        m_opened = false;
+        ui->btnSerial->setText("Open");
+
+        AddSerialPorts(m_serial->Scan());
+    }
+    else
+    {
+        m_serial->Open(ui->cmbSerialPort->currentText(), ui->cmbBaud->currentText());
+
+        if(m_serial->IsInitialized())
+        {
+            m_opened = true;
+
+            ui->cmbSerialPort->setDisabled(true);
+            ui->cmbBaud->setDisabled(true);
+
+            ui->btnSerial->setText("Close");
+        }
+        else
+        {
+            AddSerialPorts(m_serial->Scan());
+        }
+    }
 }
 

@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QLineEdit>
 #include "Programs/Misc/Logger.h"
+#include "Programs/Serial/Serial.h"
 #include "Programs/Server/TcpServer.h"
 
 namespace Ui {
@@ -39,6 +40,8 @@ private slots:
 
     void on_lePort_textChanged(const QString &arg1);
 
+    void on_btnSerial_clicked();
+
 private:
     Ui::MicTcpWidget *ui;
 
@@ -48,9 +51,14 @@ private:
     TcpServer* m_server = nullptr;
     log_level_t m_logLevel = LOG_INFO;
 
+    Serial* m_serial = nullptr;
+    bool m_opened = false;
+
     void Init(void);
     void LoadSettings();
     void SaveSettings();
+
+    void AddSerialPorts(const QStringList &list);
     void AssignPort(void);
     void AssignLogLevel(void);
 
