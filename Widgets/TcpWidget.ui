@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>970</width>
-    <height>703</height>
+    <height>747</height>
    </rect>
   </property>
   <property name="palette">
@@ -247,6 +247,13 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLineEdit" name="leSerial">
+     <property name="text">
+      <string>Serial Input</string>
+     </property>
     </widget>
    </item>
   </layout>

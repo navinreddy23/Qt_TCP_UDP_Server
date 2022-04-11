@@ -239,3 +239,13 @@ void TcpWidget::on_btnSerial_clicked()
     }
 }
 
+
+void TcpWidget::on_leSerial_returnPressed()
+{
+    if(m_opened)
+    {
+        m_serial->SendSerialCmd(ui->leSerial->text() + "\r\n");
+        ui->leSerial->clear();
+    }
+}
+

@@ -42,6 +42,8 @@ private slots:
 
     void on_btnSerial_clicked();
 
+    void on_leSerial_returnPressed();
+
 private:
     Ui::MicTcpWidget *ui;
 

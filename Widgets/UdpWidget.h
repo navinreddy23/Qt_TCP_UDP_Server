@@ -36,6 +36,8 @@ private slots:
 
     void on_btnSerial_clicked();
 
+    void on_leSerial_returnPressed();
+
 signals:
     emit void setStatus(const QString& message);
     emit void logChanged(void);
