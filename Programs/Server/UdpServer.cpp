@@ -8,6 +8,10 @@
 UdpServer::UdpServer(QObject *parent) : QObject(parent)
 {
     connect(&socket, &QUdpSocket::readyRead, this, &UdpServer::onReadReady);
+    connect(&m_timer, &QTimer::timeout, this, &UdpServer::OnTimeout);
+
+    m_timer.setInterval(1000);
+    m_timer.start();
 }
 
 UdpServer::~UdpServer()
@@ -56,6 +60,12 @@ void UdpServer::onReadReady()
 
         Q_UNUSED(request);
 
+        m_packetsReceived++;
+        m_bytesReceived += request.size();
+
+        LogOutputEmitter(LOG_DEBUG, QString("Received data: %1").arg(m_packetsReceived));
+        LogOutputEmitter(LOG_VERBOSE, QString("Packet Size: %1").arg(request.size()));
+
         socket.writeDatagram(datagram.makeReply(response));
     }
 }
@@ -63,6 +73,19 @@ void UdpServer::onReadReady()
 void UdpServer::LogInputEmitter(log_level_t level, const QString &message)
 {
     emit logOutput(level, message);
+}
+
+void UdpServer::OnTimeout()
+{
+    LogOutputEmitter(LOG_INFO, "------------------------------");
+
+    m_timeout++;
+
+    quint64 dataRate = m_bytesReceived / m_timeout;
+    quint64 packetRate = m_packetsReceived / m_timeout;
+
+    LogOutputEmitter(LOG_INFO, QString("Data rate: %1 kB/sec").arg(dataRate/1024));
+    LogOutputEmitter(LOG_INFO, QString("Packet rate: %1/sec").arg(packetRate));
 }
 
 bool UdpServer::Started() const

@@ -1,6 +1,7 @@
 #ifndef UDPSERVER_H
 #define UDPSERVER_H
 
+#include <QTimer>
 #include <QObject>
 #include <QUdpSocket>
 #include "Programs/Misc/Logger.h"
@@ -23,8 +24,13 @@ signals:
 private slots:
     void onReadReady();
     void LogInputEmitter(log_level_t level, const QString& message);
+    void OnTimeout(void);
 
 private:
+    quint64 m_bytesReceived = 0;
+    quint64 m_packetsReceived = 0;
+    quint64 m_timeout = 0;
+    QTimer m_timer;
     bool m_started;
     QUdpSocket socket;
     Logger logger;

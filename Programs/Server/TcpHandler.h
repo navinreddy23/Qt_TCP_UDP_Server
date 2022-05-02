@@ -39,6 +39,11 @@ private:
     qintptr handle;
     QTcpSocket* socket = new QTcpSocket(nullptr);
 
+    QString m_sendCommand = "";
+
+    quint64 m_bytesReceived = 0;
+    quint64 m_packetsReceived = 0;
+    quint64 m_timeout = 0;
     quint32 m_idle = 0;
     bool m_quit = false;
     Logger logger;

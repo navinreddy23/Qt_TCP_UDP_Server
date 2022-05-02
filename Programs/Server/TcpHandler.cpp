@@ -4,6 +4,9 @@
 #define IDLE_TIMEOUT_SEC    10
 #define MODULE_NAME         " [TcpHandler] "
 
+#define LED_ON_CMD          "1"
+#define LED_OFF_CMD         "0"
+
 Q_DECLARE_METATYPE(log_level_t)
 
 TcpHandler::TcpHandler(QObject *parent, qintptr handle) : QObject(parent), QRunnable()
@@ -23,6 +26,8 @@ TcpHandler::TcpHandler(QObject *parent, qintptr handle) : QObject(parent), QRunn
     /* Connect relevant signals and slots */
     connect(socket,     &QTcpSocket::readyRead,     this, &TcpHandler::onReadyRead,      Qt::QueuedConnection);
     connect(socket,     &QTcpSocket::disconnected,  this, &TcpHandler::close,            Qt::QueuedConnection);
+
+    m_sendCommand = LED_ON_CMD;
 }
 
 TcpHandler::~TcpHandler()
@@ -71,6 +76,16 @@ void TcpHandler::onReadyRead()
 
     request = socket->readAll();
 
+    m_packetsReceived++;
+    m_bytesReceived += request.size();
+
+    LogOutputEmitter(LOG_DEBUG, QString("Received data: %1").arg(m_packetsReceived));
+    LogOutputEmitter(LOG_VERBOSE, QString("Packet Size: %1").arg(request.size()));
+
+//    LogOutputEmitter(LOG_INFO, QString(request));
+
+    response = m_sendCommand.toUtf8();
+
     socket->write(response);
     socket->waitForBytesWritten();
 
@@ -80,6 +95,25 @@ void TcpHandler::onReadyRead()
 void TcpHandler::onTimeout()
 {
     m_idle++;
+
+    LogOutputEmitter(LOG_INFO, "------------------------------");
+
+    m_timeout++;
+
+    quint64 dataRate = m_bytesReceived / m_timeout;
+    quint64 packetRate = m_packetsReceived / m_timeout;
+
+    LogOutputEmitter(LOG_INFO, QString("Data rate: %1 kB/sec").arg(dataRate/1024));
+    LogOutputEmitter(LOG_INFO, QString("Packet rate: %1/sec").arg(packetRate));
+
+    if (m_timeout % 2)
+    {
+        m_sendCommand = LED_ON_CMD;
+    }
+    else
+    {
+        m_sendCommand = LED_OFF_CMD;
+    }
 }
 
 void TcpHandler::onQuit()
