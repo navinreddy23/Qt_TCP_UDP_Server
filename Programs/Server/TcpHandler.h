@@ -9,6 +9,7 @@
 #include <QTcpSocket>
 #include <QAbstractSocket>
 #include "Programs/Misc/Logger.h"
+#include "Programs/IMU/Imu.h"
 
 class TcpHandler : public QObject, public QRunnable
 {
@@ -47,6 +48,8 @@ private:
     quint32 m_idle = 0;
     bool m_quit = false;
     Logger logger;
+
+    void DebugPrint(const QByteArray& data);
 
     void LogInputEmitter(log_level_t level, const QString& message);
     void LogOutputEmitter(log_level_t level, const QString &message);

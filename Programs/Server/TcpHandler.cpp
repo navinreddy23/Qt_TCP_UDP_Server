@@ -1,5 +1,9 @@
 #include <QHostAddress>
+#include <cstring>
+#include "Programs/IMU/Imu.h"
+#include "Programs/Misc/Logger.h"
 #include "TcpHandler.h"
+#include "qglobal.h"
 
 #define IDLE_TIMEOUT_SEC    10
 #define MODULE_NAME         " [TcpHandler] "
@@ -79,10 +83,21 @@ void TcpHandler::onReadyRead()
     m_packetsReceived++;
     m_bytesReceived += request.size();
 
-    LogOutputEmitter(LOG_DEBUG, QString("Received data: %1").arg(m_packetsReceived));
+    LogOutputEmitter(LOG_VERBOSE, QString("Received data: %1").arg(m_packetsReceived));
     LogOutputEmitter(LOG_VERBOSE, QString("Packet Size: %1").arg(request.size()));
 
 //    LogOutputEmitter(LOG_INFO, QString(request));
+
+    DebugPrint(request);
+
+    if(m_sendCommand == LED_ON_CMD)
+    {
+        m_sendCommand = LED_OFF_CMD;
+    }
+    else
+    {
+        m_sendCommand = LED_ON_CMD;
+    }
 
     response = m_sendCommand.toUtf8();
 
@@ -90,6 +105,22 @@ void TcpHandler::onReadyRead()
     socket->waitForBytesWritten();
 
     m_idle = 0;
+}
+
+void TcpHandler::DebugPrint(const QByteArray &data)
+{
+    imu_sensor_data_t sensorData[SENSOR_BATCH_SIZE];
+
+    memcpy(sensorData, data.data(), sizeof(sensorData));
+
+//    qInfo() << "Accel " << "x: " << sensorData[63].accel.x <<  "y: " << sensorData[63].accel.y << "z: " << sensorData[63].accel.z;
+//    qInfo() << "Gyro " << "x: " << sensorData[63].gyro.x <<  "y: " << sensorData[63].gyro.y << "z: " << sensorData[63].gyro.z;
+
+    for (int i = 0; i < SENSOR_BATCH_SIZE; i++)
+    {
+        qInfo() << "Accel (" << i  << ") " << "x: " << sensorData[i].accel.x <<  "     y: " << sensorData[i].accel.y << "    z: " << sensorData[i].accel.z;
+        qInfo() << "Gyro  (" << i  << ") " << "x: " << sensorData[i].gyro.x <<   "     y: " << sensorData[i].gyro.y <<  "   z: " << sensorData[i].gyro.z;
+    }
 }
 
 void TcpHandler::onTimeout()
@@ -105,15 +136,7 @@ void TcpHandler::onTimeout()
 
     LogOutputEmitter(LOG_INFO, QString("Data rate: %1 kB/sec").arg(dataRate/1024));
     LogOutputEmitter(LOG_INFO, QString("Packet rate: %1/sec").arg(packetRate));
-
-    if (m_timeout % 2)
-    {
-        m_sendCommand = LED_ON_CMD;
-    }
-    else
-    {
-        m_sendCommand = LED_OFF_CMD;
-    }
+    LogOutputEmitter(LOG_DEBUG, QString("Total data Rxd: %1 MB").arg(m_bytesReceived/(1024*1024)));
 }
 
 void TcpHandler::onQuit()

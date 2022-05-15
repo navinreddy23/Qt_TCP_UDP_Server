@@ -23,6 +23,7 @@ DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060300    # disables all the APIs depr
 
 SOURCES += \
     Dialogs/AboutDialog.cpp \
+    Programs/IMU/Imu.cpp \
     Programs/Server/TcpHandler.cpp \
     Programs/Server/TcpServer.cpp \
     Programs/Server/UdpServer.cpp \
@@ -35,6 +36,7 @@ SOURCES += \
 
 HEADERS += \
     Dialogs/AboutDialog.h \
+    Programs/IMU/Imu.h \
     Programs/Server/TcpHandler.h \
     Programs/Server/TcpServer.h \
     Programs/Server/UdpServer.h \
