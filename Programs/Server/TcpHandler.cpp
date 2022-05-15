@@ -118,8 +118,8 @@ void TcpHandler::DebugPrint(const QByteArray &data)
 
     for (int i = 0; i < SENSOR_BATCH_SIZE; i++)
     {
-        qInfo() << "Accel (" << i  << ") " << "x: " << sensorData[i].accel.x <<  "     y: " << sensorData[i].accel.y << "    z: " << sensorData[i].accel.z;
-        qInfo() << "Gyro  (" << i  << ") " << "x: " << sensorData[i].gyro.x <<   "     y: " << sensorData[i].gyro.y <<  "   z: " << sensorData[i].gyro.z;
+        qInfo() << sensorData[i].accel.timestamp << " " << "Accel (" << i  << ") " << "x: " << sensorData[i].accel.x <<  "     y: " << sensorData[i].accel.y << "    z: " << sensorData[i].accel.z;
+        qInfo() << sensorData[i].gyro.timestamp << " " << "Gyro  (" << i  << ") " << "x: " << sensorData[i].gyro.x <<   "     y: " << sensorData[i].gyro.y <<  "   z: " << sensorData[i].gyro.z;
     }
 }
 

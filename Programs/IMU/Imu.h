@@ -19,6 +19,8 @@ typedef struct __attribute__((packed)) bmi160_sensor_data_accel
     /*! Z-axis sensor data */
     qint16 z;
 
+    quint32 timestamp;
+
 }imu_sensor_accel_t;
 
 typedef struct __attribute__((packed)) bmi160_sensor_data_gyro
@@ -31,6 +33,8 @@ typedef struct __attribute__((packed)) bmi160_sensor_data_gyro
 
     /*! Z-axis sensor data */
     qint16 z;
+
+    quint32 timestamp;
 
 }imu_sensor_gyro_t;
 
