@@ -50,6 +50,7 @@ private:
     Logger logger;
 
     void DebugPrint(const QByteArray& data);
+    void SaveToFile(const QByteArray& data);
 
     void LogInputEmitter(log_level_t level, const QString& message);
     void LogOutputEmitter(log_level_t level, const QString &message);

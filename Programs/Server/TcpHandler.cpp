@@ -1,3 +1,4 @@
+#include <QDir>
 #include <QHostAddress>
 #include <cstring>
 #include "Programs/IMU/Imu.h"
@@ -89,6 +90,7 @@ void TcpHandler::onReadyRead()
 //    LogOutputEmitter(LOG_INFO, QString(request));
 
     DebugPrint(request);
+    SaveToFile(request);
 
     if(m_sendCommand == LED_ON_CMD)
     {
@@ -113,14 +115,37 @@ void TcpHandler::DebugPrint(const QByteArray &data)
 
     memcpy(sensorData, data.data(), sizeof(sensorData));
 
-//    qInfo() << "Accel " << "x: " << sensorData[63].accel.x <<  "y: " << sensorData[63].accel.y << "z: " << sensorData[63].accel.z;
-//    qInfo() << "Gyro " << "x: " << sensorData[63].gyro.x <<  "y: " << sensorData[63].gyro.y << "z: " << sensorData[63].gyro.z;
-
     for (int i = 0; i < SENSOR_BATCH_SIZE; i++)
     {
         qInfo() << sensorData[i].accel.timestamp << " " << "Accel (" << i  << ") " << "x: " << sensorData[i].accel.x <<  "     y: " << sensorData[i].accel.y << "    z: " << sensorData[i].accel.z;
         qInfo() << sensorData[i].gyro.timestamp << " " << "Gyro  (" << i  << ") " << "x: " << sensorData[i].gyro.x <<   "     y: " << sensorData[i].gyro.y <<  "   z: " << sensorData[i].gyro.z;
     }
+}
+
+void TcpHandler::SaveToFile(const QByteArray &data)
+{
+    QFile file;
+    QString path;
+
+    imu_sensor_data_t sensorData[SENSOR_BATCH_SIZE];
+
+    memcpy(sensorData, data.data(), sizeof(sensorData));
+
+    path = QString("/home/navin/AccelData") + QDir::separator() + "_accelGyro_"
+            + QDateTime::currentDateTime().toString("yyyy-MM-dd_HH.mm.ss") + ".csv";
+
+    file.setFileName(path);
+    file.open(QIODevice::WriteOnly);
+
+    QTextStream stream(&file);
+
+    stream << QString("timestamp, ax, ay, az, gx, gy, gz\r\n");
+    for (int i = 0; i < SENSOR_BATCH_SIZE; i++)
+    {
+        stream << QString("%1, %2, %3, %4, %5, %6, %7\r\n").arg(sensorData[i].accel.timestamp).arg(sensorData[i].accel.x).arg(sensorData[i].accel.y).arg(sensorData[i].accel.z).arg(sensorData[i].gyro.x).arg(sensorData[i].gyro.y).arg(sensorData[i].gyro.z);
+    }
+
+    file.close();
 }
 
 void TcpHandler::onTimeout()

@@ -56,7 +56,7 @@ void TcpWidget::logOutput(log_level_t level, const QString &message)
 {
     if (level > LOG_NONE && level <= m_logLevel)
     {
-        ui->teMicTcp->append(QTime::currentTime().toString() + "  -  " + message);
+        ui->teMicTcp->append(QTime::currentTime().toString("hh:mm:ss.z") + "  -  " + message);
         ui->teMicTcp->verticalScrollBar()->minimum();
     }
 }
