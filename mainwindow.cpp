@@ -12,6 +12,7 @@
 #include <QDesktopServices>
 
 #include "mainwindow.h"
+#include "qfont.h"
 #include "ui_mainwindow.h"
 #include "Dialogs/AboutDialog.h"
 
@@ -35,12 +36,15 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionClear_Log_triggered()
 {
+    QFont font;
     QTextEdit* textEditor = GetCurrentTextEditPtr();
 
     if (textEditor != nullptr)
     {
+        font = textEditor->currentFont();
         textEditor->selectAll();
         textEditor->cut();
+        textEditor->setCurrentFont(font);
     }
 }
 

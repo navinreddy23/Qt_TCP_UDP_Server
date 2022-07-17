@@ -174,6 +174,8 @@ void Serial::ProcessLine(QByteArray &data)
             str.remove(QChar(0x1B));
             str.remove("[33m");
             str.remove("[31m");
+            str.remove("[2J");
+            str.remove("[;H");
             str.remove("[0m");
             LogOutputEmitter(LOG_INFO, str);
             emit stringRxd(str);
