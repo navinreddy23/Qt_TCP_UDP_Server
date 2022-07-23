@@ -3,12 +3,15 @@
 #include <QScrollBar>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QCompleter>
 
 #include "UdpWidget.h"
 #include "ui_UdpWidget.h"
 
 #define KEY_FONT            "udpFont"
 #define KEY_UDP_PORT        "udpPort"
+#define KEY_SERIAL_LIST     "serialInputsList"
+#define KEY_SERIAL_IP       "serialInput"
 
 UdpWidget::UdpWidget(QWidget *parent) :
     QWidget(parent),
@@ -18,6 +21,7 @@ UdpWidget::UdpWidget(QWidget *parent) :
 
     Init();
     LoadSettings();
+    SetCompleter();
 }
 
 UdpWidget::~UdpWidget()
@@ -88,9 +92,28 @@ void UdpWidget::LoadSettings()
     ui->lePort->setText(settings.value(KEY_UDP_PORT).toString());
     AssignPort();
 
+    m_serialInputs.clear();
+    int size = settings.beginReadArray(KEY_SERIAL_LIST);
+    for(int i = 0; i < size; i++)
+    {
+        settings.setArrayIndex(i);
+        m_serialInputs.append(settings.value(KEY_SERIAL_IP).toString());
+    }
+
+    m_serialInputs.removeDuplicates();
+
+    settings.endArray();
+
     settings.endGroup();
 
     ui->teMicUdp->setCurrentFont(font);
+}
+
+void UdpWidget::SetCompleter()
+{
+    m_serialInputs.removeDuplicates();
+    QCompleter* completer = new QCompleter(m_serialInputs, this);
+    ui->leSerial->setCompleter(completer);
 }
 
 void UdpWidget::SaveSettings()
@@ -102,6 +125,16 @@ void UdpWidget::SaveSettings()
 
     settings.setValue(KEY_FONT, font);
     settings.setValue(KEY_UDP_PORT, ui->lePort->text());
+
+    settings.beginWriteArray(KEY_SERIAL_LIST);
+    int i = 0;
+    foreach (QString str, m_serialInputs)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue(KEY_SERIAL_IP, str);
+        i++;
+    }
+    settings.endArray();
 
     settings.endGroup();
 }
@@ -231,6 +264,12 @@ void UdpWidget::on_leSerial_returnPressed()
     if(m_opened)
     {
         m_serial->SendSerialCmd(ui->leSerial->text() + "\r\n");
+        if(!ui->leSerial->text().isEmpty())
+        {
+            m_serialInputs.append(ui->leSerial->text());
+            SetCompleter();
+        }
+
         ui->leSerial->clear();
     }
 }

@@ -52,11 +52,11 @@ void UdpServer::onReadReady()
         QNetworkDatagram datagram = socket.receiveDatagram();
 
         QByteArray request(datagram.data());
-        QByteArray response;
+        QByteArray response("Hello");
 
         Q_UNUSED(request);
 
-        socket.writeDatagram(datagram.makeReply(response));
+        socket.writeDatagram(datagram.makeReply(request));
     }
 }
 

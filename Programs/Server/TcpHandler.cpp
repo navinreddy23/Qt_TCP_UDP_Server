@@ -1,4 +1,5 @@
 #include <QHostAddress>
+#include "Programs/Misc/Logger.h"
 #include "TcpHandler.h"
 
 #define IDLE_TIMEOUT_SEC    10
@@ -55,6 +56,7 @@ void TcpHandler::run()
 void TcpHandler::close()
 {
     qInfo() << "Closing TCP socket: " << socket;
+    LogOutputEmitter(LOG_INFO, QString("Closing TCP socket"));
     emit closeConn();
     LogOutputEmitter(LOG_DEBUG, QString("Closing TCP connection: %1").arg((qlonglong)socket));
 
@@ -67,9 +69,10 @@ void TcpHandler::close()
 void TcpHandler::onReadyRead()
 {
     QByteArray request;
-    QByteArray response;
 
     request = socket->readAll();
+
+    QByteArray response(request);
 
     socket->write(response);
     socket->waitForBytesWritten();

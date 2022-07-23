@@ -26,8 +26,8 @@ void TcpServer::Start(quint16 port)
 
     if (this->listen(QHostAddress::AnyIPv4, port))
     {
-        qInfo() << "Mic Server started on " << port;
-        LogOutputEmitter(LOG_INFO, QString("Mic server started on port: %1").arg(port));
+        qInfo() << "TCP Server started on " << port;
+        LogOutputEmitter(LOG_INFO, QString("TCP server started on port: %1").arg(port));
         m_started = true;
     }
     else

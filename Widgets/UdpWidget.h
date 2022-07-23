@@ -54,8 +54,11 @@ private:
     log_level_t m_logLevel = LOG_INFO;
     bool m_opened = false;
 
+    QStringList m_serialInputs;
+
     void Init(void);
     void LoadSettings(void);
+    void SetCompleter();
     void SaveSettings(void);
 
     void AddSerialPorts(const QStringList &list);

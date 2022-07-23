@@ -56,8 +56,11 @@ private:
     Serial* m_serial = nullptr;
     bool m_opened = false;
 
+    QStringList m_serialInputs;
+
     void Init(void);
     void LoadSettings();
+    void SetCompleter();
     void SaveSettings();
 
     void AddSerialPorts(const QStringList &list);
